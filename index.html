@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+   <style>
+    body{
+display: grid;
+place-items: center;
+overflow: hidden;
+    }
+
+    .results{
+        display: flex;
+    }
+    
+    .articleDiv{
+    height: 705px;
+     width: calc(145px*10);
+     border: 1px solid black;
+     margin-right: 2px;
+     animation: scroll 110s linear infinite ; 
+     color: white;
+     font-family: Arial, Helvetica, sans-serif;
+   
+
+    }
+
+    .line{
+        height:7px;
+        width:40%;
+        margin-left:1px;
+        border-radius: 4px;
+        border: 0;
+        background-color: white;
+        margin-top: -10px;
+       
+        
+    }
+    .info{
+        width: 90%;
+        margin: auto;
+        margin-top: 50px;
+    }
+
+    .info h1{
+        font-size: 50px;
+    }
+    
+    .info p{
+        font-size: 20px;
+    }
+  
+    @keyframes scroll{
+        0%{transform:translateX(0)}
+        100%{transform:translateX(calc(-1460px*9))}
+    }
+
+    
+   </style>
+</head>
+<body>
+    <div class="results"></div>
+</body>
+</html>
+<script>
+async function articles(){
+   try{
+    let response=await fetch
+(`https://api.rss2json.com/v1/api.json?rss_url=http%3A%2F%2Ffeeds.feedburner.com%2Fndtvnews-top-stories.rss`)
+   
+  let data=await response.json()
+  console.log("articles:",data.items)
+  let articleData=data.items
+  appendArticles(articleData)
+}
+   catch(e){
+       console.log("e:",e)
+   }
+}
+articles()
+
+ const appendArticles=(items)=>{
+  items.forEach(function(e){
+    let div=document.createElement('div')
+    div.setAttribute("class","info")
+
+    let articleDiv=document.createElement('div')
+    articleDiv.setAttribute("class","articleDiv")
+    articleDiv.style.backgroundImage="url('https://cdn.ndtv.com/common/images/ogndtv.png')"
+    
+    let title=document.createElement("h1")
+    title.textContent=e.title
+
+    let line=document.createElement("hr")
+     line.setAttribute('class','line')
+    
+    let des=document.createElement("p")
+    des.textContent=e.description
+     
+    div.append(title,line,des)
+    articleDiv.append(div)
+    document.querySelector(".results").append(articleDiv)
+  })
+  }
+
+
+
+
+// async function parseRSS(){
+//     const RSS_URL = `http://feeds.feedburner.com/ndtvnews-top-stories.rss`;
+
+// await fetch(RSS_URL, {
+//     method: 'GET', 
+//     mode: 'same-origin', 
+//     // crossOrigin:"anonymous",
+//     // crossOriginResourcePolicy: "same-origin",
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },})
+//   .then(response => response.text())
+//   .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+//   .then(data => console.log(data))
+// }
+
+// parseRSS()
+
+
+
+// async function postData(url = '', data = {}) {
+  
+//   const response = await fetch(url, {
+//     method: 'GET', // *GET, POST, PUT, DELETE, etc.
+//     mode: 'cors', // no-cors, *cors, same-origin
+//     headers: {
+//       'Content-Type': 'application/json'
+//     },
+//     redirect: 'follow', // manual, *follow, error
+//     referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+//     // body: JSON.stringify(data) // body data type must match "Content-Type" header
+//   });
+//   return response.json(); // parses JSON response into native JavaScript objects
+// }
+
+// postData('http://feeds.feedburner.com/ndtvnews-top-stories.rss', { answer: 19 })
+//   .then((data) => {
+//     console.log(data); // JSON data parsed by `data.json()` call
+//   });
+
+ 
+ </script>
